@@ -1,0 +1,13 @@
+bricklink_bot:
+  token: ${TELEGRAM_BOT_TOKEN}
+
+bricklink:
+  auth:
+    consumer_key: ${BL_CONSUMER_KEY}
+    consumer_secret: ${BL_CONSUMER_SECRET}
+    access_token: ${BL_ACCESS_TOKEN}
+    token_secret: ${BL_TOKEN_SECRET}
+
+logging:
+  level:
+    root: INFO
