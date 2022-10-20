@@ -1,23 +1,21 @@
 package com.vdubchak.telegrambricklinkbot.configuration;
 
-import com.vdubchak.telegrambricklinkbot.bricklink.auth.BricklinkHeadersProvider;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import com.github.kshashov.telegram.config.TelegramBotGlobalProperties;
+import com.github.kshashov.telegram.config.TelegramBotGlobalPropertiesConfiguration;
+import com.pengrad.telegrambot.request.SetWebhook;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+@Component
+public class BotConfiguration implements TelegramBotGlobalPropertiesConfiguration {
 
-@Configuration
-public class BotConfiguration {
-    @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setInterceptors(Collections.singletonList(bricklinkHeadersProvider()));
-        return restTemplate;
-    }
+    @Value("${bricklink_bot.token}")
+    private String token;
+    @Value("${bricklink_bot.url}")
+    private String url;
 
-    @Bean
-    public BricklinkHeadersProvider bricklinkHeadersProvider() {
-        return new BricklinkHeadersProvider();
+    @Override
+    public void configure(TelegramBotGlobalProperties.Builder builder) {
+        builder.configureBot(token, botBuilder -> botBuilder.useWebhook(new SetWebhook().url(url)));
     }
 }

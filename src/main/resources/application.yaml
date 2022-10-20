@@ -1,5 +1,6 @@
 bricklink_bot:
   token: ${TELEGRAM_BOT_TOKEN}
+  url: ${TELEGRAM_BOT_BASE_URL}
 
 bricklink:
   auth:
