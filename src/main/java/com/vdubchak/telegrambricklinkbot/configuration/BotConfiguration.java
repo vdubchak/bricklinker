@@ -16,6 +16,7 @@ public class BotConfiguration implements TelegramBotGlobalPropertiesConfiguratio
 
     @Override
     public void configure(TelegramBotGlobalProperties.Builder builder) {
-        builder.configureBot(token, botBuilder -> botBuilder.useWebhook(new SetWebhook().url(url)));
+        builder.setWebserverPort(Integer.parseInt(System.getenv("PORT")))
+                .configureBot(token, botBuilder -> botBuilder.useWebhook(new SetWebhook().url(url)));
     }
 }
