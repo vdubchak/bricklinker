@@ -14,9 +14,12 @@ public class BotConfiguration implements TelegramBotGlobalPropertiesConfiguratio
     @Value("${bricklink_bot.url}")
     private String url;
 
+    @Value("${bricklink_bot.port}")
+    private int port;
+
     @Override
     public void configure(TelegramBotGlobalProperties.Builder builder) {
-        builder.setWebserverPort(Integer.parseInt(System.getenv("PORT")))
+        builder.setWebserverPort(port)
                 .configureBot(token, botBuilder -> botBuilder.useWebhook(new SetWebhook().url(url)));
     }
 }
