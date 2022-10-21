@@ -1,7 +1,9 @@
+server:
+  port: 8086
 bricklink_bot:
   token: ${TELEGRAM_BOT_TOKEN}
   url: ${TELEGRAM_BOT_BASE_URL}
-  port: ${WEBHOOK_PORT:8443}
+  port: ${PORT:8443}
 
 bricklink:
   auth:
