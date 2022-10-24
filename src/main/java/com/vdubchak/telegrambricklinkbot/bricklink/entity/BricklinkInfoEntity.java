@@ -10,7 +10,7 @@ public class BricklinkInfoEntity extends AbstractBricklinkEntity{
 
     @Override
     public String toString() {
-        if(meta.getCode() == 200) {
+        if(meta.getCode() == 200 && data != null && data.getName() != null) {
             return data.toString();
         } else {
             return "Nothing found \uD83D\uDE14 Try different set or try again later.";
