@@ -26,7 +26,8 @@ public class BrickLinkBotController implements TelegramMvcController {
     private static final String HELP_RESPONSE = """
             Type /info {set-num} to see set info.
             Type /price {set-num} to see price guide.
-            Example: /info 75003
+            Example: /info 4950
+            Example: /info sw0547
             Example: /price 42069 U""";
     private final BrickLinkClient brickLinkClient;
 
