@@ -24,7 +24,7 @@ public class ItemForSaleData {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\uD83D\uDCCC Set number: ").append(item.getNo()).append("\n");
+        sb.append("\uD83D\uDCCC Item number: ").append(item.getNo()).append("\n");
         sb.append("\uD83E\uDDFC Condition: ").append(newOrUsed.equals("U") ? "Used" : "New").append("\n");
         sb.append("\uD83D\uDCB1 Currency: ").append(currencyCode).append("\n");
         sb.append("\uD83D\uDCC9 Minimum price: ").append(minPrice).append("\n");

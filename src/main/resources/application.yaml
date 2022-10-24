@@ -13,4 +13,8 @@ bricklink:
 
 logging:
   level:
-    root: INFO
+    root: ${LOG_LEVEL:INFO}
+
+spring:
+  main:
+    allow-bean-definition-overriding: "true"

@@ -23,7 +23,7 @@ public class SetData extends ItemData{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\uD83C\uDF81 Set Name: ").append(name).append("\n");
+        sb.append("\uD83C\uDF81 Item Name: ").append(name).append("\n");
         sb.append("\uD83D\uDDD3 Year released: ").append(yearReleased).append("\n");
         sb.append("\uD83D\uDDBC Image link: ").append(imageUrl).append("\n");
         sb.append("\uD83D\uDE9A Weight: ").append(weight).append("g").append("\n");
