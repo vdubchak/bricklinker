@@ -32,10 +32,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.github.kshashov</groupId>-->
+<!--			<artifactId>spring-boot-starter-telegram</artifactId>-->
+<!--			<version>0.27</version>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>com.github.kshashov</groupId>
-			<artifactId>spring-boot-starter-telegram</artifactId>
-			<version>0.27</version>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots-spring-boot-starter</artifactId>
+			<version>6.1.0</version>
 		</dependency>
 	</dependencies>
 
