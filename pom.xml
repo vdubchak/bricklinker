@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.vdubchak</groupId>
 	<artifactId>TelegramBricklinkBot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>TelegramBricklinkBot</name>
 	<description>TelegramBricklinkBot</description>
 	<properties>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>org.springframework.retry</groupId>
 			<artifactId>spring-retry</artifactId>
-			<version>1.2.5.RELEASE</version>
+			<version>1.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
