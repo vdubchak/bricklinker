@@ -1,6 +1,6 @@
 package com.vdubchak.telegrambricklinkbot.configuration;
 
-import com.vdubchak.telegrambricklinkbot.bricklink.auth.BricklinkHeadersProvider;
+import com.vdubchak.telegrambricklinkbot.configuration.auth.BricklinkHeadersProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
