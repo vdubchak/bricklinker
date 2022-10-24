@@ -17,32 +17,32 @@ public class BrickLinkClient {
         this.restTemplate = restTemplate;
     }
 
-    public String getPrice(String set) {
+    public BricklinkPriceEntity getPrice(String set) {
 
         URI url = UriComponentsBuilder.fromHttpUrl("https://api.bricklink.com/api/store/v1/items/SET/" + set + "/price")
                 .queryParam("region", "eu")
                 .queryParam("new_or_used", "N")
                 .build().toUri();
 
-        return restTemplate.getForEntity(url, BricklinkPriceEntity.class).getBody().toString();
+        return restTemplate.getForEntity(url, BricklinkPriceEntity.class).getBody();
     }
 
-    public String getPrice(String set, String state) {
+    public BricklinkPriceEntity getPrice(String set, String state) {
 
         URI url = UriComponentsBuilder.fromHttpUrl("https://api.bricklink.com/api/store/v1/items/SET/" + set + "/price")
                                       .queryParam("region", "eu")
                                       .queryParam("new_or_used", state)
                                       .build().toUri();
 
-        return restTemplate.getForEntity(url, BricklinkPriceEntity.class).getBody().toString();
+        return restTemplate.getForEntity(url, BricklinkPriceEntity.class).getBody();
     }
 
-    public String getInfo(String set) {
+    public BricklinkInfoEntity getInfo(String set) {
 
         URI url = UriComponentsBuilder.fromHttpUrl("https://api.bricklink.com/api/store/v1/items/SET/" + set)
                                       .build().toUri();
 
-        return restTemplate.getForEntity(url, BricklinkInfoEntity.class).getBody().toString();
+        return restTemplate.getForEntity(url, BricklinkInfoEntity.class).getBody();
     }
 
 }
