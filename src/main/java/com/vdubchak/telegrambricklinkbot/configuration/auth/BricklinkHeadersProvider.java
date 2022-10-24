@@ -1,4 +1,4 @@
-package com.vdubchak.telegrambricklinkbot.bricklink.auth;
+package com.vdubchak.telegrambricklinkbot.configuration.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,8 +38,8 @@ public class BricklinkHeadersProvider implements ClientHttpRequestInterceptor {
     public static final String TOKEN_SECRET = "oauth_token_secret";
 
     private static final String HMAC_SHA1 = "HmacSHA1";
-    private final String signMethod = "HMAC-SHA1";
-    private final String version = "1.0";
+    private final String SIGN_METHOD_VALUE = "HMAC-SHA1";
+    private final String VERSION_VALUE = "1.0";
 
     private String url;
     @Value("${bricklink.auth.consumer_key}")
@@ -69,7 +69,7 @@ public class BricklinkHeadersProvider implements ClientHttpRequestInterceptor {
         return execution.execute(request, body);
     }
 
-    private String getOauthHeader() throws Exception {
+    private String getOauthHeader() {
         StringBuilder stringBuilder = new StringBuilder("Oauth ");
         getFinalOAuthParams().forEach((name, value) -> stringBuilder.append(name).append("=\"").append(value).append("\",") );
         if(stringBuilder.charAt(stringBuilder.length() - 1) == ',') {
@@ -79,12 +79,10 @@ public class BricklinkHeadersProvider implements ClientHttpRequestInterceptor {
 
         return stringBuilder.toString();
     }
-    private Map<String, String> getFinalOAuthParams() throws Exception {
+    private Map<String, String> getFinalOAuthParams() {
         oauthParameters = new TreeMap<>();
         String signature = computeSignature();
-
-        Map<String, String> params = new TreeMap<>();
-        params.putAll(oauthParameters);
+        Map<String, String> params = new TreeMap<>(oauthParameters);
         params.put(SIGNATURE, signature);
 
         return params;
@@ -95,12 +93,12 @@ public class BricklinkHeadersProvider implements ClientHttpRequestInterceptor {
     }
 
     private String computeSignature() {
-        addOAuthParameter(VERSION, version);
+        addOAuthParameter(VERSION, VERSION_VALUE);
         addOAuthParameter(TIMESTAMP, getTimestampInSeconds());
         addOAuthParameter(NONCE, getNonce());
         addOAuthParameter(TOKEN, token);
         addOAuthParameter(CONSUMER_KEY, consumerKey);
-        addOAuthParameter(SIGN_METHOD, signMethod);
+        addOAuthParameter(SIGN_METHOD, SIGN_METHOD_VALUE);
         Map<String, String> params = new HashMap<>();
         params.putAll(oauthParameters);
         params.putAll(this.params);
