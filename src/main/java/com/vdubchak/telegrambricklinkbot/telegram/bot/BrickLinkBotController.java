@@ -14,6 +14,8 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.vdubchak.telegrambricklinkbot.bricklink.BrickLinkClient;
 import com.vdubchak.telegrambricklinkbot.bricklink.entity.BricklinkInfoEntity;
+import com.vdubchak.telegrambricklinkbot.bricklink.enums.Condition;
+import com.vdubchak.telegrambricklinkbot.bricklink.enums.ItemType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -24,7 +26,8 @@ public class BrickLinkBotController implements TelegramMvcController {
     private static final String HELP_RESPONSE = """
             Type /info {set-num} to see set info.
             Type /price {set-num} to see price guide.
-            Example: /price 75033-1""";
+            Example: /info 75003
+            Example: /price 42069 U""";
     private final BrickLinkClient brickLinkClient;
 
     @Value(value = "${bricklink_bot.token}")
@@ -41,30 +44,47 @@ public class BrickLinkBotController implements TelegramMvcController {
 
     @BotRequest(value = "/price {set:[\\d]+(?:-\\d)?}", type = {MessageType.MESSAGE})
     public BaseRequest pricePrivate(@BotPathVariable("set") String set, User user, Chat chat) {
-        String response = brickLinkClient.getPrice(formatSetNumber(set)).toString();
+        String response = brickLinkClient.getPrice(ItemType.SET, formatSetNumber(ItemType.SET, set), Condition.NEW).toString();
         return new SendMessage(chat.id(), response);
 
     }
 
-    @BotRequest(value = "/price {set:[\\d]+(?:-\\d)?} {state:N|U}", type = {MessageType.MESSAGE, MessageType.CALLBACK_QUERY})
-    public BaseRequest pricePrivateNewUsed(@BotPathVariable("set") String set, @BotPathVariable("state") String state, User user, Chat chat) {
-        String response = brickLinkClient.getPrice(formatSetNumber(set), state).toString();
+    @BotRequest(value = "/price {set:[\\d]+(?:-\\d)?} {state:NEW|USED}", type = {MessageType.MESSAGE, MessageType.CALLBACK_QUERY})
+    public BaseRequest priceSet(@BotPathVariable("set") String set, @BotPathVariable("state") String stateStr, User user, Chat chat) {
+        Condition state = Condition.valueOf(stateStr);
+        String response = brickLinkClient.getPrice(ItemType.SET, formatSetNumber(ItemType.SET, set), state).toString();
+        return new SendMessage(chat.id(), response);
+
+    }
+
+    @BotRequest(value = "/price {itemType:SET|MINIFIG|PART} {number:[a-z0-9]{0,8}(?:-\\d)?} {state:NEW|USED}", type = {MessageType.MESSAGE, MessageType.CALLBACK_QUERY})
+    public BaseRequest priceAll(@BotPathVariable("itemType") String itemTypeStr, @BotPathVariable("number") String number, @BotPathVariable("state") String stateStr, User user, Chat chat) {
+        ItemType itemType = ItemType.valueOf(itemTypeStr);
+        Condition state = Condition.valueOf(stateStr);
+        String response = brickLinkClient.getPrice(itemType, formatSetNumber(itemType, number), state).toString();
         return new SendMessage(chat.id(), response);
 
     }
 
     @BotRequest(value = "/info {set:[\\d]+(?:-\\d)?}", type = {MessageType.MESSAGE})
-    public BaseRequest infoPrivate(@BotPathVariable("set") String set, User user, Chat chat) {
-        BricklinkInfoEntity info = brickLinkClient.getInfo(formatSetNumber(set));
+    public BaseRequest infoDefault(@BotPathVariable("set") String number, User user, Chat chat) {
+        BricklinkInfoEntity info = brickLinkClient.getInfo(ItemType.SET, formatSetNumber(ItemType.SET, number));
         SendMessage message = new SendMessage(chat.id(), info.toString());
-        message.replyMarkup(buildInfoMenu(info.getData().getNo()));
+        if(info.getData().getNo() != null) {
+            message.replyMarkup(buildInfoMenu(ItemType.SET, number));
+        }
         return message;
-
     }
 
-    @BotRequest(type = {MessageType.MESSAGE})
-    public BaseRequest defaultResponse(User user, Chat chat) {
-        return new SendMessage(chat.id(), HELP_RESPONSE);
+    @BotRequest(value = "/info {number:[a-z]{1,3}[\\d]+.*}", type = {MessageType.MESSAGE})
+    public BaseRequest infoMinifigure(@BotPathVariable("number") String number, User user, Chat chat) {
+        BricklinkInfoEntity info = brickLinkClient.getInfo(ItemType.MINIFIG, formatSetNumber(ItemType.MINIFIG, number));
+        SendMessage message = new SendMessage(chat.id(), info.toString());
+        if(info.getData().getNo() != null) {
+            message.replyMarkup(buildInfoMenu(ItemType.MINIFIG, number));
+        }
+        return message;
+
     }
 
     @BotRequest(value = "/help", type = {MessageType.MESSAGE})
@@ -74,27 +94,27 @@ public class BrickLinkBotController implements TelegramMvcController {
 
     @BotRequest(value = "/start", type = {MessageType.MESSAGE})
     public BaseRequest startResponse(User user, Chat chat) {
-        return new SendMessage(chat.id(), HELP_RESPONSE);
+        return new SendMessage(chat.id(), "Welcome to brick link prices chat bot!\n" + HELP_RESPONSE);
     }
 
-    private String formatSetNumber(String set) {
-        if (!set.contains("-")) {
-            set = set + "-1";
+    private String formatSetNumber(ItemType type, String number) {
+        if (type == ItemType.SET && !number.contains("-")) {
+            number = number + "-1";
         }
-        return set;
+        return number;
     }
 
-    public Keyboard buildInfoMenu(String setNum) {
+    public Keyboard buildInfoMenu(ItemType type, String setNum) {
         InlineKeyboardButton priceButton = new InlineKeyboardButton("\uD83D\uDCCA Price guide");
-        priceButton.callbackData("/price " + setNum + " N");
+        priceButton.callbackData("/price " + type + " " + setNum + " NEW");
         InlineKeyboardButton priceNewButton = new InlineKeyboardButton("\uD83C\uDD95 New");
-        priceNewButton.callbackData("/price " + setNum + " N");
+        priceNewButton.callbackData("/price " + type + " " + setNum + " NEW");
         InlineKeyboardButton priceUsedButton = new InlineKeyboardButton("\uD83E\uDDF9 Used");
-        priceUsedButton.callbackData("/price " + setNum + " U");
+        priceUsedButton.callbackData("/price " + type + " " + setNum + " USED");
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup(priceButton);
         markup.addRow(priceNewButton, priceUsedButton);
 
         return markup;
     }
-
+    
 }
