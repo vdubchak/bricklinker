@@ -40,6 +40,9 @@ public class ItemLotSoldData {
         for (int i = 0; i < code.length(); i++) {
             emojiStr.appendCodePoint(code.charAt(i) + OFFSET);
         }
-        return emojiStr.toString();
+        if(emojiStr.toString().equals("\uD83C\uDDF7\uD83C\uDDFA")) {
+          return code + " " + "\uD83D\uDCA9";
+        }
+        return code + " " + emojiStr;
     }
 }

@@ -94,7 +94,7 @@ public class BrickLinkBotController implements TelegramMvcController {
         BricklinkInfoEntity info = brickLinkClient.getInfo(ItemType.SET, formatSetNumber(ItemType.SET, number));
         SendMessage message = new SendMessage(chat.id(), info.toString());
         if(info.getData().getNo() != null) {
-            message.replyMarkup(buildInfoMenu(ItemType.SET, number));
+            message.replyMarkup(buildInfoMenu(ItemType.SET, number, chat));
         }
         return message;
     }
@@ -104,7 +104,7 @@ public class BrickLinkBotController implements TelegramMvcController {
         BricklinkInfoEntity info = brickLinkClient.getInfo(ItemType.MINIFIG, formatSetNumber(ItemType.MINIFIG, number));
         SendMessage message = new SendMessage(chat.id(), info.toString());
         if(info.getData().getNo() != null) {
-            message.replyMarkup(buildInfoMenu(ItemType.MINIFIG, number));
+            message.replyMarkup(buildInfoMenu(ItemType.MINIFIG, number, chat));
         }
         return message;
 
@@ -127,23 +127,29 @@ public class BrickLinkBotController implements TelegramMvcController {
         return number;
     }
 
-    public Keyboard buildInfoMenu(ItemType type, String setNum) {
+    public Keyboard buildInfoMenu(ItemType type, String setNum, Chat chat) {
         InlineKeyboardButton priceNewButton = new InlineKeyboardButton("\uD83C\uDD95 New item price");
         priceNewButton.callbackData("/price " + type + " " + setNum + " NEW SIMPLE");
         InlineKeyboardButton priceUsedButton = new InlineKeyboardButton("\uD83E\uDDF9 Used item price");
         priceUsedButton.callbackData("/price " + type + " " + setNum + " USED SIMPLE");
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.addRow(priceNewButton, priceUsedButton);
-        InlineKeyboardButton priceNewDetailedButton = new InlineKeyboardButton("\uD83D\uDCCA New price guide");
-        priceNewDetailedButton.callbackData("/price " + type + " " + setNum + " NEW STOCK");
-        InlineKeyboardButton priceUsedDetailedButton = new InlineKeyboardButton("\uD83D\uDCCA Used price guide");
-        priceUsedDetailedButton.callbackData("/price " + type + " " + setNum + " USED STOCK");
-        markup.addRow(priceNewDetailedButton, priceUsedDetailedButton);
-        InlineKeyboardButton priceNewHistoryButton = new InlineKeyboardButton("\uD83D\uDD50 New price history");
-        priceNewHistoryButton.callbackData("/price " + type + " " + setNum + " NEW SOLD");
-        InlineKeyboardButton priceUsedHistoryButton = new InlineKeyboardButton("\uD83D\uDD50 Used price history");
-        priceUsedHistoryButton.callbackData("/price " + type + " " + setNum + " USED SOLD");
-        markup.addRow(priceNewHistoryButton, priceUsedHistoryButton);
+        if(chat.type() != Chat.Type.supergroup && chat.type() != Chat.Type.channel && chat.type() != Chat.Type.group) {
+            InlineKeyboardButton priceNewDetailedButton = new InlineKeyboardButton("\uD83D\uDCCA New price guide");
+            priceNewDetailedButton.callbackData("/price " + type + " " + setNum + " NEW STOCK");
+            InlineKeyboardButton priceUsedDetailedButton = new InlineKeyboardButton("\uD83D\uDCCA Used price guide");
+            priceUsedDetailedButton.callbackData("/price " + type + " " + setNum + " USED STOCK");
+            markup.addRow(priceNewDetailedButton, priceUsedDetailedButton);
+            InlineKeyboardButton priceNewHistoryButton = new InlineKeyboardButton("\uD83D\uDD50 New price history");
+            priceNewHistoryButton.callbackData("/price " + type + " " + setNum + " NEW SOLD");
+            InlineKeyboardButton priceUsedHistoryButton = new InlineKeyboardButton("\uD83D\uDD50 Used price history");
+            priceUsedHistoryButton.callbackData("/price " + type + " " + setNum + " USED SOLD");
+            markup.addRow(priceNewHistoryButton, priceUsedHistoryButton);
+        } else {
+            InlineKeyboardButton botLinkButton = new InlineKeyboardButton("More info");
+            botLinkButton.url("https://t.me/Bricklinking_Bot");
+            markup.addRow(botLinkButton);
+        }
         return markup;
     }
     
