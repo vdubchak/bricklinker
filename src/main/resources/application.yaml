@@ -1,7 +1,7 @@
 bricklink_bot:
   token: ${TELEGRAM_BOT_TOKEN}
-  url: ${TELEGRAM_BOT_BASE_URL:https://b087-176-120-103-96.eu.ngrok.io}
-  port: ${PORT:8443}
+  url: ${TELEGRAM_BOT_BASE_URL:}
+  port: ${PORT:0}
 
 bricklink:
   api_base_url: ${BL_API_BASE_URL:https://api.bricklink.com/api/store/v1/}
@@ -14,7 +14,3 @@ bricklink:
 logging:
   level:
     root: ${LOG_LEVEL:INFO}
-
-spring:
-  main:
-    allow-bean-definition-overriding: "true"

@@ -32,6 +32,10 @@ public class TelegramBricklinkBotApplication {
 		SpringApplication.run(TelegramBricklinkBotApplication.class, args);
 	}
 
+	/**
+	 * Temp solution to register 'fake' webhook on telegram, because starter automatically deletes existing on shutdown.
+	 * So when heroku puts app to sleep user requests can still 'wake' it up.
+	 */
 	@PreDestroy
 	public void registerPseudoHook() {
 		if(url.isPresent()) {

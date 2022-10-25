@@ -4,8 +4,8 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
-public class BricklinkPriceEntity extends AbstractBricklinkEntity {
-    ItemsForSaleData data;
+public class BricklinkHistoricPriceEntity extends AbstractBricklinkEntity {
+    ItemsSoldData data;
 
     @Override
     public String toString() {

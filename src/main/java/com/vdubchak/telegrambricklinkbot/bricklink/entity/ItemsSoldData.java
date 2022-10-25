@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ItemForSaleData {
+public class ItemsSoldData {
     private ItemData item;
     @JsonProperty("new_or_used")
     private String newOrUsed;
@@ -19,7 +19,7 @@ public class ItemForSaleData {
     @JsonProperty("avg_price")
     private String averagePrice;
     @JsonProperty("price_detail")
-    private List<ItemLotData> shopItems;
+    private List<ItemLotSoldData> shopItems;
 
     @Override
     public String toString() {
@@ -30,8 +30,8 @@ public class ItemForSaleData {
         sb.append("\uD83D\uDCC9 Minimum price: ").append(minPrice).append("\n");
         sb.append("\uD83D\uDCC8 Maximum price: ").append(maxPrice).append("\n");
         sb.append("\uD83E\uDDEE Average price: ").append(averagePrice).append("\n");
-        if(shopItems.size() > 0) {
-            sb.append("\uD83D\uDCB0 Lots for sale: ").append("\n");
+        if (shopItems.size() > 0) {
+            sb.append("\uD83D\uDCB0 Lots sold: ").append("\n");
             shopItems.forEach(item -> sb.append(item.toString()).append("\n"));
         }
         return sb.toString();
